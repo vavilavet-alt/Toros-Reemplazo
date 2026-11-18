@@ -81,20 +81,85 @@ input[type=range]{width:100%;height:28px;margin:0;accent-color:var(--green)}
 .dock small{font-size:12px;color:var(--greenSoft)}
 @media (max-width:900px){.dock{display:flex}}
 @media (min-width:901px){.wrap{padding-bottom:48px}}
+.head{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:16px}
+.head header{flex:1 1 420px}
+.btn-print{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 18px;border-radius:10px;border:0;background:var(--green);color:#fff;font-size:15px;font-weight:700;cursor:pointer}
+.btn-print svg{width:20px;height:20px}
+.btn-print[disabled]{opacity:.6;cursor:progress}
+.btn-outline{background:transparent;color:var(--green);box-shadow:inset 0 0 0 1.5px var(--green)}
+.head-btns{display:flex;flex-wrap:wrap;gap:10px}
+.actions{flex-wrap:wrap}
+.row input[type=text]{flex:1 1 auto;min-width:0;height:50px;padding:0 14px;font-size:17px;background:var(--field);border:1px solid var(--fieldLine);border-radius:10px}
+.print-meta{display:none}
+@media print{
+  @page{size:A4 portrait;margin:12mm}
+  html,body{background:#fff}
+  body{font-size:10pt}
+  .wrap{padding:0;gap:10px;max-width:none}
+  .lead,.dock,.actions,.btn-print,.head-btns,.seg,input[type=range],.hint,.no-print{display:none!important}
+  h1{font-size:20pt}
+  .print-meta{display:flex;flex-wrap:wrap;gap:6px 24px;font-size:10pt;color:var(--ink2);margin-top:4px}
+  .print-meta b{color:var(--ink)}
+  .cols{display:block}
+  .inputs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-bottom:10px}
+  .card{padding:12px 14px;border-radius:8px;break-inside:avoid}
+  .card h2{font-size:12pt;margin:0 0 6px}
+  .card h3{font-size:11pt;margin:0 0 6px}
+  .field{flex-direction:row;align-items:center;justify-content:space-between;gap:8px;margin:0;padding:3px 0;border-top:1px solid var(--line2)}
+  .field-head{display:contents}
+  .field label,.field .lbl{font-size:9.5pt;font-weight:500}
+  .row{gap:4px;flex:none}
+  .row input[type=number]{flex:none;width:64px;height:auto;padding:0;border:0;background:none;font-size:10pt;font-weight:700;text-align:right;-moz-appearance:textfield;appearance:textfield}
+  .row input::-webkit-inner-spin-button,.row input::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
+  .unit{width:auto;font-size:9.5pt}
+  .age{display:block}
+  .age button{display:none}
+  .age button[aria-pressed=true]{display:inline;height:auto;padding:0;border:0;background:none;color:var(--ink);font-size:10pt}
+  .results{gap:8px}
+  .hero,.bar div,.legend i{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .hero{padding:12px 16px;border-radius:10px;gap:16px}
+  .hero .big{font-size:34pt}
+  .hero .mid{font-size:26pt}
+  .kpis{grid-template-columns:repeat(6,minmax(0,1fr));gap:5px}
+  .kpi{padding:6px 8px;border-radius:6px;gap:2px;break-inside:avoid}
+  .kpi .l,.kpi .s{font-size:7.5pt;line-height:1.2}
+  .kpi .v{font-size:13pt}
+  .bar{height:14px;margin-bottom:6px}
+  .legend{font-size:8.5pt}
+  .step{padding:2px 0;font-size:8.5pt}
+  .note{font-size:8pt;margin-top:4px}
+}
 </style>
 </head>
 <body>
 <div class="wrap">
+  <div class="head">
   <header>
     <span class="eyebrow">Planificación reproductiva</span>
     <h1>Calculadora de toros de reemplazo</h1>
     <p class="lead">Calcula los toros necesarios para repaso y monta directa, los descuenta del plantel apto y estima cuántos toretes deben entrar a crianza o adquirirse.</p>
+    <div class="print-meta" id="print-meta"></div>
   </header>
+  <div class="head-btns">
+  <button type="button" class="btn-print btn-outline" id="print">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9V3h12v6"/><rect x="6" y="14" width="12" height="7" rx="1"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/></svg>
+    Imprimir
+  </button>
+  <button type="button" class="btn-print" id="pdf">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>
+    Descargar PDF
+  </button>
+  </div>
+  </div>
 
   <div class="cols">
     <div class="inputs">
       <section class="card" aria-label="Rebaño de vacas">
         <h2>Rebaño de vacas</h2>
+        <div class="field no-print">
+          <label for="predio">Predio / cliente (opcional)</label>
+          <div class="row"><input id="predio" type="text" autocomplete="off" placeholder="Aparece en el informe impreso"></div>
+        </div>
         <div class="field">
           <label for="vacas">Total de vacas a encaste por año</label>
           <div class="row"><input id="vacas" type="number" inputmode="decimal" min="0" step="1"><span class="unit">vacas</span></div>
@@ -167,7 +232,7 @@ input[type=range]{width:100%;height:28px;margin:0;accent-color:var(--green)}
         </div>
       </section>
 
-      <div class="actions"><button type="button" class="btn-ghost" id="reset">Restablecer valores</button></div>
+      <div class="actions" style="gap:10px"><button type="button" class="btn-ghost" id="print2">Imprimir</button><button type="button" class="btn-ghost" id="pdf2">Descargar PDF</button><button type="button" class="btn-ghost" id="reset">Restablecer valores</button></div>
     </div>
 
     <section class="results" aria-label="Resultados" aria-live="polite">
@@ -221,7 +286,7 @@ input[type=range]{width:100%;height:28px;margin:0;accent-color:var(--green)}
 (function () {
   'use strict';
   var KEY = 'toros-reemplazo-v1';
-  var DEFAULTS = { vacas: '500', ia: '400', iaPct: '80', iaMode: 'n', fert: '55', ratioRep: '5', ratioDir: '3', n: '12', vol: '15', inv: '10', perd: '10', edad: 2 };
+  var DEFAULTS = { vacas: '500', ia: '400', iaPct: '80', iaMode: 'n', fert: '55', ratioRep: '5', ratioDir: '3', n: '12', vol: '15', inv: '10', perd: '10', edad: 2, predio: '' };
   var s = Object.assign({}, DEFAULTS);
   try { var saved = JSON.parse(localStorage.getItem(KEY) || 'null'); if (saved) s = Object.assign(s, saved); } catch (e) {}
   function save() { try { localStorage.setItem(KEY, JSON.stringify(s)); } catch (e) {} }
@@ -236,11 +301,20 @@ input[type=range]{width:100%;height:28px;margin:0;accent-color:var(--green)}
 
   var simple = ['vacas', 'fert', 'ratioRep', 'ratioDir', 'n', 'vol', 'inv', 'perd'];
 
+  function printMeta() {
+    var d = new Date();
+    var fecha = d.toLocaleDateString('es-CL', { day: '2-digit', month: '2-digit', year: 'numeric' });
+    var predio = (s.predio || '').trim();
+    $('print-meta').innerHTML = (predio ? '<span>Predio: <b>' + esc(predio) + '</b></span>' : '') + '<span>Fecha: <b>' + esc(fecha) + '</b></span>';
+  }
+  function doPrint() { printMeta(); window.print(); }
+
   function syncInputs() {
     simple.forEach(function (k) {
       var el = $(k); if (document.activeElement !== el) el.value = s[k];
       var r = document.querySelector('input[type=range][data-for="' + k + '"]'); if (r) r.value = num(s[k]);
     });
+    if (document.activeElement !== $('predio')) $('predio').value = s.predio || '';
     var pct = s.iaMode === 'pct';
     var ia = $('ia');
     if (document.activeElement !== ia) ia.value = pct ? s.iaPct : s.ia;
@@ -305,8 +379,23 @@ input[type=range]{width:100%;height:28px;margin:0;accent-color:var(--green)}
     $('balance').textContent = r.deficit > 0 ? 'Faltan ' + fmt(r.deficit) + ' toros aptos' : 'Excedente de ' + fmt(-r.deficit) + ' toros aptos';
     $('dToCriar').textContent = int(r.toCriar); $('dReq').textContent = int(r.req); $('dRem').textContent = int(r.reemplazo);
 
+    var kpis = buildKpis(r);
+    $('kpis').innerHTML = kpis.map(function (k) {
+      return '<div class="kpi"><span class="l">' + esc(k[0]) + '</span><span class="v"' + (k[3] ? ' style="color:' + k[3] + '"' : '') + '>' + esc(k[1]) + '</span><span class="s">' + esc(k[2]) + '</span></div>';
+    }).join('');
+
+    var w = function (x) { return (r.n > 0 ? x / r.n * 100 : 0).toFixed(2) + '%'; };
+    $('bKeep').style.width = w(r.aptos); $('bVol').style.width = w(r.volN); $('bInv').style.width = w(r.invN);
+    $('bar').setAttribute('aria-label', 'Aptos ' + fmt(r.aptos) + ', descarte voluntario ' + fmt(r.volN) + ', descarte involuntario ' + fmt(r.invN) + ' toros');
+
+    $('steps').innerHTML = buildSteps(r).map(function (st) {
+      return '<div class="step"><span class="sl">' + esc(st[0]) + '</span><span class="sv">' + esc(st[1]) + '</span></div>';
+    }).join('');
+  }
+
+  function buildKpis(r) {
     var vacasPorToro = r.req > 0 ? r.aToro / r.req : 0;
-    var kpis = [
+    return [
       ['Vacas directo a toro', fmt(r.directo), 'encaste − inseminadas', ''],
       ['Preñadas por IA', fmt(r.prenIA), 'vacas', ''],
       ['Vacías post IA', fmt(r.vaciasIA), 'pasan a repaso', ''],
@@ -319,15 +408,10 @@ input[type=range]{width:100%;height:28px;margin:0;accent-color:var(--green)}
       ['Toros aptos disponibles', fmt(r.aptos), 'de ' + fmt(r.n) + ' evaluados', ''],
       ['Toretes en crianza', int(r.toCriar * r.edad), r.edad + ' generaciones simultáneas (máx.)', '']
     ];
-    $('kpis').innerHTML = kpis.map(function (k) {
-      return '<div class="kpi"><span class="l">' + esc(k[0]) + '</span><span class="v"' + (k[3] ? ' style="color:' + k[3] + '"' : '') + '>' + esc(k[1]) + '</span><span class="s">' + esc(k[2]) + '</span></div>';
-    }).join('');
+  }
 
-    var w = function (x) { return (r.n > 0 ? x / r.n * 100 : 0).toFixed(2) + '%'; };
-    $('bKeep').style.width = w(r.aptos); $('bVol').style.width = w(r.volN); $('bInv').style.width = w(r.invN);
-    $('bar').setAttribute('aria-label', 'Aptos ' + fmt(r.aptos) + ', descarte voluntario ' + fmt(r.volN) + ', descarte involuntario ' + fmt(r.invN) + ' toros');
-
-    var steps = [
+  function buildSteps(r) {
+    return [
       ['Directo a toro: ' + fmt(r.vacas) + ' − ' + fmt(r.ia), fmt(r.directo)],
       ['Preñadas IA: ' + fmt(r.ia) + ' × ' + fmt(r.fert) + ' %', fmt(r.prenIA)],
       ['Vacías post IA: ' + fmt(r.ia) + ' − ' + fmt(r.prenIA), fmt(r.vaciasIA)],
@@ -339,9 +423,132 @@ input[type=range]{width:100%;height:28px;margin:0;accent-color:var(--green)}
       ['Reemplazos: ' + r.req + ' − ' + fmt(r.aptos), r.deficit > 0 ? fmt(r.deficit) + ' → ' + r.reemplazo : '0 (excedente)'],
       ['Toretes: ' + fmt(Math.max(r.deficit, 0)) + ' ÷ (1 − ' + fmt(r.perd) + ' %)', r.perd >= 100 ? '—' : fmt(r.toCriarExact) + ' → ' + r.toCriar]
     ];
-    $('steps').innerHTML = steps.map(function (st) {
-      return '<div class="step"><span class="sl">' + esc(st[0]) + '</span><span class="sv">' + esc(st[1]) + '</span></div>';
-    }).join('');
+  }
+
+  /* ---------- PDF ---------- */
+  var jsPDFLoading = null;
+  function loadJsPDF() {
+    if (window.jspdf) return Promise.resolve(window.jspdf.jsPDF);
+    if (!jsPDFLoading) jsPDFLoading = new Promise(function (res, rej) {
+      var sc = document.createElement('script');
+      sc.src = 'vendor/jspdf.umd.min.js';
+      sc.onload = function () { res(window.jspdf.jsPDF); };
+      sc.onerror = function () { jsPDFLoading = null; rej(new Error('No se pudo cargar el generador de PDF.')); };
+      document.head.appendChild(sc);
+    });
+    return jsPDFLoading;
+  }
+  var P = function (x) { return String(x).replace(/\u2212/g, '-').replace(/\u2192/g, '->').replace(/\u2248/g, '~'); };
+  var COL = { green: '#1F5A3D', greenSoft: '#CFE3D6', ink: '#1B1F1C', ink2: '#4A524D', ink3: '#5E6661', line: '#E2E0D8', line2: '#EFEDE6', keep: '#8FB59D', blue: '#234C78', orange: '#A04F12', orangeBar: '#D9823D', bar: '#ECEAE3' };
+
+  function buildPdf(JsPDF) {
+    var r = compute();
+    var doc = new JsPDF({ unit: 'mm', format: 'a4' });
+    var M = 14, W = 210 - 2 * M, y = 16;
+    var font = function (size, bold, color) { doc.setFont('helvetica', bold ? 'bold' : 'normal'); doc.setFontSize(size); doc.setTextColor(color || COL.ink); };
+    var text = function (str, x, yy, opt) { doc.text(P(str), x, yy, opt); };
+    var fecha = new Date().toLocaleDateString('es-CL', { day: '2-digit', month: '2-digit', year: 'numeric' });
+    var predio = (s.predio || '').trim();
+
+    font(8, true, COL.green); text('PLANIFICACIÓN REPRODUCTIVA', M, y);
+    y += 7; font(18, true); text('Calculadora de toros de reemplazo', M, y);
+    y += 6; font(9.5, false, COL.ink2);
+    var meta = (predio ? 'Predio: ' + predio + '     ' : '') + 'Fecha: ' + fecha;
+    text(meta, M, y);
+    y += 5;
+
+    // Parámetros
+    var iaTxt = fmt(r.ia) + ' vacas' + (r.vacas > 0 ? ' (' + fmt(r.ia / r.vacas * 100) + ' %)' : '');
+    var herd = [['Total de vacas a encaste por año', fmt(r.vacas) + ' vacas'], ['Total de vacas inseminadas', iaTxt], ['Fertilidad de la inseminación', fmt(r.fert) + ' %']];
+    var bulls = [['Toros para repaso (vacías IA)', fmt(r.ratioRep) + ' %'], ['Toros para monta directa', fmt(r.ratioDir) + ' %'], ['Toros evaluados', fmt(r.n) + ' toros'], ['Descarte voluntario', fmt(r.vol) + ' %'], ['Descarte involuntario', fmt(num(s.inv)) + ' %'], ['Pérdida en crianza', fmt(r.perd) + ' %'], ['Edad de entrada al trabajo', r.edad + ' años']];
+    var RH = 5.6, colW = (W - 6) / 2, boxH = 12 + Math.max(herd.length, bulls.length) * RH;
+    [[herd, 'Rebaño de vacas', M], [bulls, 'Plantel de toros', M + colW + 6]].forEach(function (g) {
+      doc.setDrawColor(COL.line); doc.setLineWidth(0.3); doc.roundedRect(g[2], y, colW, boxH, 2, 2, 'S');
+      font(10.5, true); text(g[1], g[2] + 4, y + 7);
+      g[0].forEach(function (row, i) {
+        var yy = y + 12 + i * RH;
+        doc.setDrawColor(COL.line2); doc.line(g[2] + 4, yy - 3.8, g[2] + colW - 4, yy - 3.8);
+        font(8.5, false, COL.ink2); text(row[0], g[2] + 4, yy);
+        font(8.5, true); text(row[1], g[2] + colW - 4, yy, { align: 'right' });
+      });
+    });
+    y += boxH + 5;
+
+    // Resultado principal
+    var HH = 28;
+    doc.setFillColor(COL.green); doc.roundedRect(M, y, W, HH, 3, 3, 'F');
+    font(8.5, false, COL.greenSoft); text('Toretes a ingresar a crianza / adquirir', M + 6, y + 7);
+    font(30, true, '#FFFFFF'); text(int(r.toCriar), M + 6, y + 19);
+    font(8, false, COL.greenSoft); text('Iniciar crianza en ' + (r.anio - r.edad) + ' para trabajar en ' + r.anio + ' (' + r.edad + ' años antes)', M + 6, y + 25);
+    var rx = M + W * 0.64;
+    doc.setDrawColor('#3F7A5B'); doc.line(rx - 5, y + 5, rx - 5, y + HH - 5);
+    font(8.5, false, COL.greenSoft); text('Reemplazos aptos requeridos', rx, y + 7);
+    font(22, true, '#FFFFFF'); text(int(r.reemplazo), rx, y + 18);
+    font(8, false, COL.greenSoft); text(r.deficit > 0 ? 'Faltan ' + fmt(r.deficit) + ' toros aptos' : 'Excedente de ' + fmt(-r.deficit) + ' toros aptos', rx, y + 25);
+    y += HH + 4;
+
+    // Indicadores
+    var kpis = buildKpis(r), cols = 4, gap = 3, kw = (W - gap * (cols - 1)) / cols, kh = 16.5;
+    var hex = { 'var(--green)': COL.green, 'var(--blue)': COL.blue, 'var(--orange)': COL.orange };
+    kpis.forEach(function (k, i) {
+      var cx = M + (i % cols) * (kw + gap), cy = y + Math.floor(i / cols) * (kh + gap);
+      doc.setDrawColor(COL.line); doc.roundedRect(cx, cy, kw, kh, 1.5, 1.5, 'S');
+      font(7, false, COL.ink3); text(k[0], cx + 3, cy + 4.5);
+      font(12.5, true, hex[k[3]] || COL.ink); text(k[1], cx + 3, cy + 10.5);
+      font(6.5, false, COL.ink3); text(doc.splitTextToSize(P(k[2]), kw - 6)[0], cx + 3, cy + 14.3);
+    });
+    y += Math.ceil(kpis.length / cols) * (kh + gap) + 2;
+
+    // Barra
+    font(9.5, true); text('Plantel evaluado', M, y + 3);
+    y += 6;
+    var bx = M, bw = W, segs = [[r.aptos, COL.keep], [r.volN, COL.blue], [r.invN, COL.orangeBar]];
+    doc.setFillColor(COL.bar); doc.rect(bx, y, bw, 4.5, 'F');
+    segs.forEach(function (sg) { var ww = r.n > 0 ? bw * sg[0] / r.n : 0; if (ww > 0) { doc.setFillColor(sg[1]); doc.rect(bx, y, ww, 4.5, 'F'); bx += ww; } });
+    y += 9;
+    var lx = M;
+    [['Aptos que permanecen (' + fmt(r.aptos) + ')', COL.keep], ['Descarte voluntario (' + fmt(r.volN) + ')', COL.blue], ['Descarte involuntario (' + fmt(r.invN) + ')', COL.orangeBar]].forEach(function (l) {
+      doc.setFillColor(l[1]); doc.rect(lx, y - 2.6, 3, 3, 'F');
+      font(7.5, false, COL.ink2); text(l[0], lx + 4.5, y);
+      lx += 4.5 + doc.getTextWidth(P(l[0])) + 8;
+    });
+    y += 7;
+
+    // Cálculo
+    font(9.5, true); text('Cálculo paso a paso', M, y);
+    y += 2;
+    buildSteps(r).forEach(function (st) {
+      y += 5.4;
+      doc.setDrawColor(COL.line2); doc.line(M, y - 3.8, M + W, y - 3.8);
+      font(8, false, COL.ink2); text(st[0], M, y);
+      font(8, true); text(st[1], M + W, y, { align: 'right' });
+    });
+    y += 5;
+    font(7, false, COL.ink3); text('Toros requeridos, reemplazos y toretes se redondean hacia arriba a unidades enteras.', M, y);
+
+    return doc;
+  }
+
+  function pdfName() {
+    var d = new Date(), pad = function (n) { return (n < 10 ? '0' : '') + n; };
+    var base = (s.predio || '').trim().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^A-Za-z0-9]+/g, '-').replace(/^-|-$/g, '').toLowerCase();
+    return 'toros-reemplazo' + (base ? '_' + base : '') + '_' + d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()) + '.pdf';
+  }
+
+  function doPdf(ev) {
+    var btn = ev && ev.currentTarget; if (btn) btn.disabled = true;
+    loadJsPDF().then(function (JsPDF) {
+      var doc = buildPdf(JsPDF), name = pdfName();
+      var blob = doc.output('blob');
+      var file = null;
+      try { file = new File([blob], name, { type: 'application/pdf' }); } catch (e) {}
+      var mobile = window.matchMedia && window.matchMedia('(pointer: coarse)').matches;
+      if (mobile && file && navigator.canShare && navigator.canShare({ files: [file] })) {
+        return navigator.share({ files: [file], title: 'Toros de reemplazo' }).catch(function (e) { if (e && e.name !== 'AbortError') doc.save(name); });
+      }
+      doc.save(name);
+    }).catch(function (e) { alert(e.message || 'No se pudo generar el PDF.'); })
+      .then(function () { if (btn) btn.disabled = false; });
   }
 
   function update() { save(); syncInputs(); render(); }
@@ -365,7 +572,13 @@ input[type=range]{width:100%;height:28px;margin:0;accent-color:var(--green)}
   document.querySelectorAll('[data-edad]').forEach(function (b) {
     b.addEventListener('click', function () { s.edad = +b.dataset.edad; update(); });
   });
-  $('reset').addEventListener('click', function () { s = Object.assign({}, DEFAULTS); if (document.activeElement) document.activeElement.blur(); update(); });
+  $('predio').addEventListener('input', function (e) { s.predio = e.target.value; save(); });
+  $('print').addEventListener('click', doPrint);
+  $('print2').addEventListener('click', doPrint);
+  $('pdf').addEventListener('click', doPdf);
+  $('pdf2').addEventListener('click', doPdf);
+  window.addEventListener('beforeprint', printMeta);
+  $('reset').addEventListener('click', function () { s = Object.assign({}, DEFAULTS, { predio: s.predio }); if (document.activeElement) document.activeElement.blur(); update(); });
 
   syncInputs(); render();
 

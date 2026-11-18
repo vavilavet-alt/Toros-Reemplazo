@@ -1,5 +1,5 @@
 // Cambia la versión al publicar cambios para que los teléfonos descarguen la nueva app.
-var CACHE = 'toros-reemplazo-v1';
+var CACHE = 'toros-reemplazo-v3';
 var ASSETS = [
   './',
   './index.html',
@@ -8,7 +8,8 @@ var ASSETS = [
   './icons/icon-512.png',
   './icons/icon-maskable-512.png',
   './icons/apple-touch-icon.png',
-  './icons/favicon-32.png'
+  './icons/favicon-32.png',
+  './vendor/jspdf.umd.min.js'
 ];
 
 self.addEventListener('install', function (e) {
