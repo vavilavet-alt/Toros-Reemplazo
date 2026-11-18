@@ -1,0 +1,21 @@
+CALCULADORA DE TOROS DE REEMPLAZO - App instalable (PWA)
+
+PUBLICAR (gratis, 2 minutos)
+1. Descomprime este archivo. Debe quedar la carpeta "toros-reemplazo".
+2. Entra a https://app.netlify.com/drop (crea cuenta gratis con tu correo).
+3. Arrastra la carpeta "toros-reemplazo" completa a la página.
+4. Netlify te entrega un link https://....netlify.app. Ese es el link de tu app.
+   (Opcional: en Site settings puedes cambiar el nombre, ej. toros-reemplazo.netlify.app)
+
+INSTALAR EN EL CELULAR
+- Android (Chrome): abre el link > menú (3 puntos) > "Instalar app" / "Agregar a pantalla principal".
+- iPhone (Safari): abre el link > botón Compartir > "Agregar a inicio".
+Ábrela una vez con señal; después funciona sin internet en el campo.
+
+ACTUALIZAR LA APP
+Si cambias index.html, edita sw.js y sube el número de versión
+(toros-reemplazo-v1 -> toros-reemplazo-v2). Luego vuelve a arrastrar la carpeta a Netlify
+(en tu sitio: Deploys > arrastrar carpeta). Los celulares se actualizan la próxima vez que abran la app con señal.
+
+NOTA: la app recuerda los últimos valores ingresados en cada teléfono.
+"Restablecer valores" vuelve a los valores de ejemplo.

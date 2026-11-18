@@ -1,0 +1,17 @@
+{
+  "name": "Calculadora de Toros de Reemplazo",
+  "short_name": "Toros Reemplazo",
+  "description": "Calcula toros requeridos, reemplazos y toretes a criar para rebaños bovinos.",
+  "lang": "es-CL",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#F4F3EE",
+  "theme_color": "#1F5A3D",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

@@ -1,0 +1,378 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Toros de Reemplazo</title>
+<meta name="description" content="Calculadora de toros de reemplazo para rebaños bovinos.">
+<meta name="theme-color" content="#1F5A3D">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Toros Reemplazo">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<style>
+:root{
+  --bg:#F4F3EE;--card:#FFFFFF;--line:#E2E0D8;--line2:#EFEDE6;--ink:#1B1F1C;--ink2:#4A524D;--ink3:#5E6661;
+  --green:#1F5A3D;--green2:#3F7A5B;--greenSoft:#CFE3D6;--blue:#234C78;--orange:#A04F12;--orangeBar:#D9823D;--keep:#8FB59D;
+  --field:#F9F8F5;--fieldLine:#CFCCC2;
+  --font:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Inter,"Helvetica Neue",Arial,sans-serif;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);line-height:1.4}
+button,input{font:inherit;color:inherit}
+input:focus-visible,button:focus-visible{outline:2px solid var(--green);outline-offset:2px}
+.wrap{max-width:1160px;margin:0 auto;padding:calc(24px + env(safe-area-inset-top)) 16px 120px;display:flex;flex-direction:column;gap:24px}
+header{display:flex;flex-direction:column;gap:6px}
+.eyebrow{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--green)}
+h1{margin:0;font-size:clamp(26px,6vw,40px);line-height:1.1;font-weight:800;letter-spacing:-.01em}
+.lead{margin:0;font-size:15px;color:var(--ink2);max-width:680px}
+.cols{display:flex;flex-wrap:wrap;gap:20px;align-items:flex-start}
+.inputs{flex:1 1 340px;min-width:0;display:flex;flex-direction:column;gap:16px}
+.results{flex:999 1 520px;min-width:0;display:flex;flex-direction:column;gap:16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:22px}
+.card h2{margin:0 0 18px;font-size:19px;font-weight:700}
+.card h3{margin:0 0 12px;font-size:15px;font-weight:700}
+.field{display:flex;flex-direction:column;gap:8px;margin-bottom:22px}
+.field:last-child{margin-bottom:0}
+.field-head{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px}
+.field label,.field .lbl{font-size:15px;font-weight:600}
+.row{display:flex;align-items:center;gap:10px}
+.row input[type=number]{flex:1 1 auto;min-width:0;height:50px;padding:0 14px;font-size:18px;font-weight:500;background:var(--field);border:1px solid var(--fieldLine);border-radius:10px}
+.unit{width:48px;font-size:15px;color:var(--ink2)}
+input[type=range]{width:100%;height:28px;margin:0;accent-color:var(--green)}
+.hint{margin:0;font-size:13px;color:var(--ink3)}
+.seg{display:flex;gap:4px;background:#ECEAE3;border-radius:8px;padding:3px}
+.seg button{min-height:34px;min-width:64px;padding:0 12px;border:0;border-radius:6px;background:transparent;color:var(--ink2);font-size:13px;font-weight:700;cursor:pointer}
+.seg button[aria-pressed=true]{background:#fff;color:var(--green);box-shadow:0 1px 2px rgba(0,0,0,.12)}
+.age{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.age button{height:50px;border-radius:10px;font-size:16px;font-weight:700;cursor:pointer;border:1px solid var(--fieldLine);background:var(--field)}
+.age button[aria-pressed=true]{background:var(--green);border-color:var(--green);color:#fff}
+.alert{background:#FCEBDD;border:1px solid #E7B48C;color:#7A3A0C;border-radius:12px;padding:12px 16px;font-size:14px}
+.hero{background:var(--green);color:#fff;border-radius:16px;padding:24px;display:flex;flex-wrap:wrap;gap:24px;align-items:flex-end;justify-content:space-between}
+.hero .k{display:flex;flex-direction:column;gap:6px}
+.hero .k + .k{padding-left:22px;border-left:1px solid var(--green2)}
+.hero .t{font-size:14px;font-weight:500;color:var(--greenSoft)}
+.hero .big{font-size:72px;line-height:1;font-weight:800;font-variant-numeric:tabular-nums}
+.hero .mid{font-size:44px;line-height:1;font-weight:700;font-variant-numeric:tabular-nums}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:4px}
+.kpi .l{font-size:13px;color:var(--ink3)}
+.kpi .v{font-size:28px;font-weight:700;font-variant-numeric:tabular-nums}
+.kpi .s{font-size:12px;color:var(--ink3)}
+.bar{display:flex;height:20px;border-radius:6px;overflow:hidden;background:#ECEAE3;margin-bottom:12px}
+.bar div{height:100%;transition:width .2s}
+.legend{display:flex;flex-wrap:wrap;gap:16px;font-size:13px;color:var(--ink2)}
+.legend span{display:flex;align-items:center;gap:6px}
+.legend i{width:12px;height:12px;border-radius:3px;display:inline-block}
+.steps{display:flex;flex-direction:column}
+.step{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px;padding:10px 0;border-top:1px solid var(--line2);font-size:14px}
+.step .sl{color:var(--ink2)}
+.step .sv{font-weight:700;font-variant-numeric:tabular-nums}
+.note{margin:10px 0 0;font-size:12px;color:var(--ink3)}
+.actions{display:flex;justify-content:flex-end}
+.btn-ghost{min-height:44px;padding:0 16px;border-radius:10px;border:1px solid var(--fieldLine);background:transparent;font-size:14px;font-weight:600;cursor:pointer}
+.dock{position:fixed;left:0;right:0;bottom:0;background:var(--green);color:#fff;padding:12px 18px calc(12px + env(safe-area-inset-bottom));display:none;justify-content:space-around;gap:12px;box-shadow:0 -4px 16px rgba(0,0,0,.15);z-index:10}
+.dock div{display:flex;flex-direction:column;align-items:center}
+.dock b{font-size:26px;line-height:1.1;font-variant-numeric:tabular-nums}
+.dock small{font-size:12px;color:var(--greenSoft)}
+@media (max-width:900px){.dock{display:flex}}
+@media (min-width:901px){.wrap{padding-bottom:48px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <span class="eyebrow">Planificación reproductiva</span>
+    <h1>Calculadora de toros de reemplazo</h1>
+    <p class="lead">Calcula los toros necesarios para repaso y monta directa, los descuenta del plantel apto y estima cuántos toretes deben entrar a crianza o adquirirse.</p>
+  </header>
+
+  <div class="cols">
+    <div class="inputs">
+      <section class="card" aria-label="Rebaño de vacas">
+        <h2>Rebaño de vacas</h2>
+        <div class="field">
+          <label for="vacas">Total de vacas a encaste por año</label>
+          <div class="row"><input id="vacas" type="number" inputmode="decimal" min="0" step="1"><span class="unit">vacas</span></div>
+          <p class="hint">Vacas expuestas a encaste en la temporada.</p>
+        </div>
+        <div class="field">
+          <div class="field-head">
+            <label for="ia">Total de vacas inseminadas</label>
+            <div class="seg" role="group" aria-label="Ingresar inseminadas como">
+              <button type="button" data-iamode="n">Vacas</button>
+              <button type="button" data-iamode="pct">%</button>
+            </div>
+          </div>
+          <div class="row"><input id="ia" type="number" inputmode="decimal" min="0" step="1"><span class="unit" id="ia-unit">vacas</span></div>
+          <input id="ia-range" type="range" min="0" max="100" step="1" aria-label="Porcentaje de vacas inseminadas" hidden>
+          <p class="hint" id="ia-hint"></p>
+        </div>
+        <div class="field">
+          <label for="fert">Fertilidad de la inseminación</label>
+          <div class="row"><input id="fert" type="number" inputmode="decimal" min="0" max="100" step="1"><span class="unit">%</span></div>
+          <input id="fert-range" data-for="fert" type="range" min="0" max="100" step="1" aria-label="Fertilidad de la inseminación">
+          <p class="hint">Preñez lograda con IA. Las vacías pasan a repaso con toro.</p>
+        </div>
+      </section>
+
+      <section class="card" aria-label="Plantel de toros">
+        <h2>Plantel de toros</h2>
+        <div class="field">
+          <label for="ratioRep">Toros para repaso (vacías IA)</label>
+          <div class="row"><input id="ratioRep" type="number" inputmode="decimal" min="0" max="100" step="0.5"><span class="unit">%</span></div>
+          <input data-for="ratioRep" type="range" min="0" max="10" step="0.5" aria-label="Toros para repaso">
+          <p class="hint" id="ratioRep-hint"></p>
+        </div>
+        <div class="field">
+          <label for="ratioDir">Toros para monta directa</label>
+          <div class="row"><input id="ratioDir" type="number" inputmode="decimal" min="0" max="100" step="0.5"><span class="unit">%</span></div>
+          <input data-for="ratioDir" type="range" min="0" max="10" step="0.5" aria-label="Toros para monta directa">
+          <p class="hint" id="ratioDir-hint"></p>
+        </div>
+        <div class="field">
+          <label for="n">Toros evaluados</label>
+          <div class="row"><input id="n" type="number" inputmode="decimal" min="0" step="1"><span class="unit">toros</span></div>
+          <p class="hint">Toros actuales del plantel sometidos a evaluación.</p>
+        </div>
+        <div class="field">
+          <label for="vol">Descarte voluntario</label>
+          <div class="row"><input id="vol" type="number" inputmode="decimal" min="0" max="100" step="0.5"><span class="unit">%</span></div>
+          <input data-for="vol" type="range" min="0" max="50" step="0.5" aria-label="Descarte voluntario">
+          <p class="hint">Decisión de manejo: edad, mérito genético, consanguinidad.</p>
+        </div>
+        <div class="field">
+          <label for="inv">Descarte involuntario</label>
+          <div class="row"><input id="inv" type="number" inputmode="decimal" min="0" max="100" step="0.5"><span class="unit">%</span></div>
+          <input data-for="inv" type="range" min="0" max="50" step="0.5" aria-label="Descarte involuntario">
+          <p class="hint">Reprobados en examen andrológico, lesiones, enfermedad o muerte.</p>
+        </div>
+        <div class="field">
+          <label for="perd">Pérdida en crianza</label>
+          <div class="row"><input id="perd" type="number" inputmode="decimal" min="0" max="99" step="0.5"><span class="unit">%</span></div>
+          <input data-for="perd" type="range" min="0" max="50" step="0.5" aria-label="Pérdida en crianza">
+          <p class="hint">Toretes que no llegan aptos a la edad de trabajo (total del período).</p>
+        </div>
+        <div class="field">
+          <span class="lbl" id="edad-lbl">Edad de entrada al trabajo</span>
+          <div class="age" role="group" aria-labelledby="edad-lbl">
+            <button type="button" data-edad="2">2 años</button>
+            <button type="button" data-edad="3">3 años</button>
+          </div>
+          <p class="hint">Define cuántos años antes debe iniciarse la crianza y cuántas generaciones conviven.</p>
+        </div>
+      </section>
+
+      <div class="actions"><button type="button" class="btn-ghost" id="reset">Restablecer valores</button></div>
+    </div>
+
+    <section class="results" aria-label="Resultados" aria-live="polite">
+      <div id="alerts"></div>
+
+      <div class="hero">
+        <div class="k">
+          <span class="t">Toretes a ingresar a crianza / adquirir</span>
+          <span class="big" id="toCriar">0</span>
+          <span class="t" id="inicio"></span>
+        </div>
+        <div class="k">
+          <span class="t">Reemplazos aptos requeridos</span>
+          <span class="mid" id="reemplazo">0</span>
+          <span class="t" id="balance"></span>
+        </div>
+      </div>
+
+      <div class="kpis" id="kpis"></div>
+
+      <div class="card">
+        <h3>Plantel evaluado</h3>
+        <div class="bar" role="img" id="bar" aria-label="">
+          <div id="bKeep" style="background:var(--keep)"></div>
+          <div id="bVol" style="background:var(--blue)"></div>
+          <div id="bInv" style="background:var(--orangeBar)"></div>
+        </div>
+        <div class="legend">
+          <span><i style="background:var(--keep)"></i>Aptos que permanecen</span>
+          <span><i style="background:var(--blue)"></i>Descarte voluntario</span>
+          <span><i style="background:var(--orangeBar)"></i>Descarte involuntario</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Cálculo paso a paso</h3>
+        <div class="steps" id="steps"></div>
+        <p class="note">Toros requeridos, reemplazos y toretes se redondean hacia arriba a unidades enteras.</p>
+      </div>
+    </section>
+  </div>
+</div>
+
+<div class="dock" aria-hidden="true">
+  <div><b id="dToCriar">0</b><small>Toretes a criar</small></div>
+  <div><b id="dReq">0</b><small>Toros requeridos</small></div>
+  <div><b id="dRem">0</b><small>Reemplazos</small></div>
+</div>
+
+<script>
+(function () {
+  'use strict';
+  var KEY = 'toros-reemplazo-v1';
+  var DEFAULTS = { vacas: '500', ia: '400', iaPct: '80', iaMode: 'n', fert: '55', ratioRep: '5', ratioDir: '3', n: '12', vol: '15', inv: '10', perd: '10', edad: 2 };
+  var s = Object.assign({}, DEFAULTS);
+  try { var saved = JSON.parse(localStorage.getItem(KEY) || 'null'); if (saved) s = Object.assign(s, saved); } catch (e) {}
+  function save() { try { localStorage.setItem(KEY, JSON.stringify(s)); } catch (e) {} }
+
+  var $ = function (id) { return document.getElementById(id); };
+  var num = function (v) { var x = parseFloat(String(v).replace(',', '.')); return isFinite(x) && x > 0 ? x : 0; };
+  var fmt = function (v) { return v.toLocaleString('es-CL', { maximumFractionDigits: 1 }); };
+  var int = function (v) { return v.toLocaleString('es-CL'); };
+  var up = function (v) { return Math.max(Math.ceil(v - 1e-9), 0); };
+  var perToro = function (r) { return r > 0 ? '≈ 1 toro cada ' + fmt(100 / r) + ' vacas.' : ''; };
+  var esc = function (t) { return String(t).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); };
+
+  var simple = ['vacas', 'fert', 'ratioRep', 'ratioDir', 'n', 'vol', 'inv', 'perd'];
+
+  function syncInputs() {
+    simple.forEach(function (k) {
+      var el = $(k); if (document.activeElement !== el) el.value = s[k];
+      var r = document.querySelector('input[type=range][data-for="' + k + '"]'); if (r) r.value = num(s[k]);
+    });
+    var pct = s.iaMode === 'pct';
+    var ia = $('ia');
+    if (document.activeElement !== ia) ia.value = pct ? s.iaPct : s.ia;
+    ia.max = pct ? 100 : '';
+    $('ia-unit').textContent = pct ? '%' : 'vacas';
+    $('ia-range').hidden = !pct; $('ia-range').value = num(s.iaPct);
+    document.querySelectorAll('[data-iamode]').forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.iamode === s.iaMode)); });
+    document.querySelectorAll('[data-edad]').forEach(function (b) { b.setAttribute('aria-pressed', String(+b.dataset.edad === s.edad)); });
+  }
+
+  function compute() {
+    var vacas = num(s.vacas);
+    var ia = s.iaMode === 'pct' ? vacas * Math.min(num(s.iaPct), 100) / 100 : num(s.ia);
+    var fert = Math.min(num(s.fert), 100);
+    var ratioRep = num(s.ratioRep), ratioDir = num(s.ratioDir);
+    var n = num(s.n), vol = Math.min(num(s.vol), 100), inv = num(s.inv), perd = num(s.perd);
+    var edad = s.edad;
+
+    var directo = Math.max(vacas - ia, 0);
+    var prenIA = ia * fert / 100;
+    var vaciasIA = ia - prenIA;
+    var aToro = vaciasIA + directo;
+    var reqRep = vaciasIA * ratioRep / 100;
+    var reqDir = directo * ratioDir / 100;
+    var reqExact = reqRep + reqDir;
+    var req = up(reqExact);
+    var invEf = Math.min(inv, 100 - vol);
+    var volN = n * vol / 100;
+    var invN = n * invEf / 100;
+    var aptos = Math.max(n - volN - invN, 0);
+    var deficit = req - aptos;
+    var reemplazo = up(deficit);
+    var toCriarExact = perd >= 100 ? 0 : Math.max(deficit, 0) / (1 - perd / 100);
+    var toCriar = up(toCriarExact);
+    var anio = new Date().getFullYear();
+
+    return { vacas: vacas, ia: ia, fert: fert, ratioRep: ratioRep, ratioDir: ratioDir, n: n, vol: vol, inv: inv, invEf: invEf, perd: perd, edad: edad,
+      directo: directo, prenIA: prenIA, vaciasIA: vaciasIA, aToro: aToro, reqRep: reqRep, reqDir: reqDir, reqExact: reqExact, req: req,
+      volN: volN, invN: invN, aptos: aptos, deficit: deficit, reemplazo: reemplazo, toCriarExact: toCriarExact, toCriar: toCriar, anio: anio };
+  }
+
+  function render() {
+    var r = compute();
+
+    $('ia-hint').textContent = s.iaMode === 'pct'
+      ? 'Equivale a ' + fmt(r.ia) + ' vacas del encaste.'
+      : (r.vacas > 0 ? 'Equivale al ' + fmt(r.ia / r.vacas * 100) + ' % del encaste.' : 'Vacas que reciben inseminación artificial.');
+    $('ratioRep-hint').textContent = 'Repaso corto tras la IA: requiere más toros por vaca. ' + perToro(r.ratioRep);
+    $('ratioDir-hint').textContent = 'Monta natural sin IA, período más largo. ' + perToro(r.ratioDir);
+
+    var alerts = [];
+    if (r.ia > r.vacas) alerts.push('Las vacas inseminadas (' + fmt(r.ia) + ') superan el total de vacas a encaste (' + fmt(r.vacas) + '). Revisa los datos.');
+    if (num(s.vol) + num(s.inv) > 100) alerts.push('La suma de descartes supera el 100 %. Se limitó al total de toros evaluados.');
+    if (r.perd >= 100) alerts.push('La pérdida en crianza debe ser menor a 100 %.');
+    $('alerts').innerHTML = alerts.map(function (a) { return '<div class="alert" role="alert">' + esc(a) + '</div>'; }).join('');
+    $('alerts').style.display = alerts.length ? 'flex' : 'none';
+    $('alerts').style.flexDirection = 'column'; $('alerts').style.gap = '10px';
+
+    $('toCriar').textContent = int(r.toCriar);
+    $('reemplazo').textContent = int(r.reemplazo);
+    $('inicio').textContent = 'Iniciar crianza en ' + (r.anio - r.edad) + ' para trabajar en ' + r.anio + ' (' + r.edad + ' años antes)';
+    $('balance').textContent = r.deficit > 0 ? 'Faltan ' + fmt(r.deficit) + ' toros aptos' : 'Excedente de ' + fmt(-r.deficit) + ' toros aptos';
+    $('dToCriar').textContent = int(r.toCriar); $('dReq').textContent = int(r.req); $('dRem').textContent = int(r.reemplazo);
+
+    var vacasPorToro = r.req > 0 ? r.aToro / r.req : 0;
+    var kpis = [
+      ['Vacas directo a toro', fmt(r.directo), 'encaste − inseminadas', ''],
+      ['Preñadas por IA', fmt(r.prenIA), 'vacas', ''],
+      ['Vacías post IA', fmt(r.vaciasIA), 'pasan a repaso', ''],
+      ['Vacas a toro', fmt(r.aToro), 'repaso + monta directa', ''],
+      ['Toros para repaso', fmt(r.reqRep), fmt(r.ratioRep) + ' % de vacías IA', ''],
+      ['Toros monta directa', fmt(r.reqDir), fmt(r.ratioDir) + ' % de directo a toro', ''],
+      ['Toros requeridos', int(r.req), vacasPorToro ? '1 toro cada ' + fmt(vacasPorToro) + ' vacas (prom.)' : '—', 'var(--green)'],
+      ['Descarte voluntario', fmt(r.volN), 'toros', 'var(--blue)'],
+      ['Descarte involuntario', fmt(r.invN), 'toros', 'var(--orange)'],
+      ['Toros aptos disponibles', fmt(r.aptos), 'de ' + fmt(r.n) + ' evaluados', ''],
+      ['Toretes en crianza', int(r.toCriar * r.edad), r.edad + ' generaciones simultáneas (máx.)', '']
+    ];
+    $('kpis').innerHTML = kpis.map(function (k) {
+      return '<div class="kpi"><span class="l">' + esc(k[0]) + '</span><span class="v"' + (k[3] ? ' style="color:' + k[3] + '"' : '') + '>' + esc(k[1]) + '</span><span class="s">' + esc(k[2]) + '</span></div>';
+    }).join('');
+
+    var w = function (x) { return (r.n > 0 ? x / r.n * 100 : 0).toFixed(2) + '%'; };
+    $('bKeep').style.width = w(r.aptos); $('bVol').style.width = w(r.volN); $('bInv').style.width = w(r.invN);
+    $('bar').setAttribute('aria-label', 'Aptos ' + fmt(r.aptos) + ', descarte voluntario ' + fmt(r.volN) + ', descarte involuntario ' + fmt(r.invN) + ' toros');
+
+    var steps = [
+      ['Directo a toro: ' + fmt(r.vacas) + ' − ' + fmt(r.ia), fmt(r.directo)],
+      ['Preñadas IA: ' + fmt(r.ia) + ' × ' + fmt(r.fert) + ' %', fmt(r.prenIA)],
+      ['Vacías post IA: ' + fmt(r.ia) + ' − ' + fmt(r.prenIA), fmt(r.vaciasIA)],
+      ['Toros repaso: ' + fmt(r.vaciasIA) + ' × ' + fmt(r.ratioRep) + ' %', fmt(r.reqRep)],
+      ['Toros monta directa: ' + fmt(r.directo) + ' × ' + fmt(r.ratioDir) + ' %', fmt(r.reqDir)],
+      ['Toros requeridos: ' + fmt(r.reqRep) + ' + ' + fmt(r.reqDir), fmt(r.reqExact) + ' → ' + r.req],
+      ['Descartes: ' + fmt(r.n) + ' × (' + fmt(r.vol) + ' % + ' + fmt(r.invEf) + ' %)', fmt(r.volN + r.invN)],
+      ['Aptos disponibles: ' + fmt(r.n) + ' − ' + fmt(r.volN + r.invN), fmt(r.aptos)],
+      ['Reemplazos: ' + r.req + ' − ' + fmt(r.aptos), r.deficit > 0 ? fmt(r.deficit) + ' → ' + r.reemplazo : '0 (excedente)'],
+      ['Toretes: ' + fmt(Math.max(r.deficit, 0)) + ' ÷ (1 − ' + fmt(r.perd) + ' %)', r.perd >= 100 ? '—' : fmt(r.toCriarExact) + ' → ' + r.toCriar]
+    ];
+    $('steps').innerHTML = steps.map(function (st) {
+      return '<div class="step"><span class="sl">' + esc(st[0]) + '</span><span class="sv">' + esc(st[1]) + '</span></div>';
+    }).join('');
+  }
+
+  function update() { save(); syncInputs(); render(); }
+
+  simple.forEach(function (k) {
+    $(k).addEventListener('input', function (e) { s[k] = e.target.value; save(); syncInputs(); render(); });
+    var rng = document.querySelector('input[type=range][data-for="' + k + '"]');
+    if (rng) rng.addEventListener('input', function (e) { s[k] = e.target.value; update(); });
+  });
+  $('ia').addEventListener('input', function (e) { if (s.iaMode === 'pct') s.iaPct = e.target.value; else s.ia = e.target.value; save(); syncInputs(); render(); });
+  $('ia-range').addEventListener('input', function (e) { s.iaPct = e.target.value; update(); });
+  document.querySelectorAll('[data-iamode]').forEach(function (b) {
+    b.addEventListener('click', function () {
+      var mode = b.dataset.iamode; if (mode === s.iaMode) return;
+      var r = compute();
+      if (mode === 'pct') { if (r.vacas > 0) s.iaPct = String(Math.round(r.ia / r.vacas * 1000) / 10); }
+      else s.ia = String(Math.round(r.ia));
+      s.iaMode = mode; $('ia').blur(); update();
+    });
+  });
+  document.querySelectorAll('[data-edad]').forEach(function (b) {
+    b.addEventListener('click', function () { s.edad = +b.dataset.edad; update(); });
+  });
+  $('reset').addEventListener('click', function () { s = Object.assign({}, DEFAULTS); if (document.activeElement) document.activeElement.blur(); update(); });
+
+  syncInputs(); render();
+
+  if ('serviceWorker' in navigator && location.protocol !== 'file:') {
+    window.addEventListener('load', function () { navigator.serviceWorker.register('sw.js').catch(function () {}); });
+  }
+})();
+</script>
+</body>
+</html>
